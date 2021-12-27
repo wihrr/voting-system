@@ -44,7 +44,8 @@ CREATE TABLE restaurants (
 CREATE TABLE menus (
                        "id" SERIAL PRIMARY KEY NOT NULL,
                        "date" DATE NOT NULL UNIQUE,
-                       "restaurant_id" int NOT NULL
+                       "restaurant_id" int NOT NULL,
+                       FOREIGN KEY (restaurant_id) REFERENCES restaurants (id) ON DELETE CASCADE
 );
 
 
