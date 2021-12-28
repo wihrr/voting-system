@@ -19,7 +19,7 @@ import java.util.Set;
 public class Restaurant {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int id;
+    private Integer id;
 
     @NotBlank
     @Size(min = 5, max = 50)

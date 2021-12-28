@@ -6,11 +6,11 @@ import java.util.List;
 
 public interface MenuService {
 
-    Menu getById(int id);
+    Menu getById(int id, int restaurantId);
 
-    List<Menu> getAll();
+    List<Menu> getAll(int restaurantId);
 
-    Menu save(Menu menu);
+    Menu save(Menu menu, Integer restaurantId);
 
-    void delete(int id);
+    void delete(int id, int restaurantId);
 }

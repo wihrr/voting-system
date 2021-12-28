@@ -19,7 +19,7 @@ import java.util.Date;
 public class Vote {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int id;
+    private Integer id;
 
     @NotNull
     private LocalTime time;

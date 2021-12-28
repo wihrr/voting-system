@@ -9,7 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -18,27 +18,34 @@ public class MenuServiceImpl implements MenuService {
     private final MenuRepository menuRepository;
 
     @Override
-    public Menu getById(int id) {
-        Optional<Menu> menu = menuRepository.findById(id);
-        if(menu.isPresent()){
-            return menu.get();
+    public Menu getById(int id, int restaurantId) {
+        Menu menu = menuRepository.findById(id).orElseThrow(()-> new EntityNotFoundException("Can't found menu with ID - " + id));
+            if(menu.getRestaurant().getId() == restaurantId) {
+                return menu;
         } else {
-            throw new EntityNotFoundException("There is no menu with id - " + id);
+            throw new EntityNotFoundException("There is no menu with restaurant ID - " + restaurantId);
         }
     }
 
     @Override
-    public List<Menu> getAll() {
-        return (List<Menu>) menuRepository.findAll();
+    public List<Menu> getAll(int restaurantId) {
+        return menuRepository.findAll().stream().filter(menu -> menu.getRestaurant().getId().equals(restaurantId)).collect(Collectors.toList());
     }
 
     @Override
-    public Menu save(Menu menu) {
-        return menuRepository.save(menu);
+    public Menu save(Menu menu, Integer restaurantId) {
+        if(!(restaurantId==null)){
+            Menu savingMenu = menuRepository.save(menu);
+            savingMenu.getRestaurant().setId(restaurantId);
+            return menu;
+        } else {
+            throw new EntityNotFoundException("There is no restaurant with ID - " + restaurantId);
+        }
     }
 
     @Override
-    public void delete(int id) {
-        menuRepository.deleteById(id);
+    public void delete(int id, int restaurantId) {
+        Menu menu = getById(id, restaurantId);
+        menuRepository.deleteById(menu.getId());
     }
 }
