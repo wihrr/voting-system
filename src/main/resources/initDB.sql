@@ -77,5 +77,5 @@ CREATE TABLE votes (
                        "time" TIME NOT NULL,
                        FOREIGN KEY (user_id) REFERENCES users (id) ON DELETE CASCADE,
                        FOREIGN KEY (menu_id) REFERENCES menus (id) ON DELETE CASCADE,
-                       CONSTRAINT votes_idx UNIQUE (user_id, menu_id)
+                       CONSTRAINT votes_idx UNIQUE (user_id, date)
 );

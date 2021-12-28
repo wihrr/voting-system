@@ -1,6 +1,7 @@
 package by.intexsoft.vihrova.votingsystem.model;
 
 import by.intexsoft.vihrova.votingsystem.model.Role;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -47,6 +48,10 @@ public class User {
             inverseJoinColumns = @JoinColumn(name = "role_id")
     )
     private Set<Role> roles = new HashSet<>();
+
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "user")
+    @JsonManagedReference
+    private Set<Vote> votes;
 
     public void addRole(Role role){
         roles.add(role);

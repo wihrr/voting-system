@@ -1,6 +1,7 @@
 package by.intexsoft.vihrova.votingsystem.model;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -33,8 +34,11 @@ public class Menu {
     private Restaurant restaurant;
 
     @ManyToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE})
-
     private Set<Dish> dishes = new HashSet<>();
+
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "menu")
+    @JsonManagedReference
+    private Set<Vote> votes;
 
     public void addDish(Dish dish){
         dishes.add(dish);
