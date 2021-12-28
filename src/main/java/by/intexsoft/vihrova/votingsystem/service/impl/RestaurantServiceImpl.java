@@ -5,7 +5,6 @@ import by.intexsoft.vihrova.votingsystem.model.Restaurant;
 import by.intexsoft.vihrova.votingsystem.repository.RestaurantRepository;
 import by.intexsoft.vihrova.votingsystem.service.RestaurantService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -14,7 +13,6 @@ import java.util.Optional;
 @Service
 @RequiredArgsConstructor
 public class RestaurantServiceImpl implements RestaurantService {
-    @Autowired
     private final RestaurantRepository restaurantRepository;
 
     @Override
@@ -34,7 +32,7 @@ public class RestaurantServiceImpl implements RestaurantService {
 
     @Override
     public List<Restaurant> getAll() {
-        return (List<Restaurant>) restaurantRepository.findAll();
+        return restaurantRepository.findAll();
     }
 
     @Override

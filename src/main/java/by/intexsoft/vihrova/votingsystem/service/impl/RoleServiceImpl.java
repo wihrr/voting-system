@@ -5,7 +5,6 @@ import by.intexsoft.vihrova.votingsystem.model.Role;
 import by.intexsoft.vihrova.votingsystem.repository.RoleRepository;
 import by.intexsoft.vihrova.votingsystem.service.RoleService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -14,8 +13,6 @@ import java.util.Optional;
 @Service
 @RequiredArgsConstructor
 public class RoleServiceImpl implements RoleService {
-
-    @Autowired
     private final RoleRepository roleRepository;
 
     @Override
@@ -35,7 +32,7 @@ public class RoleServiceImpl implements RoleService {
 
     @Override
     public List<Role> getAll() {
-        return (List<Role>) roleRepository.findAll();
+        return roleRepository.findAll();
     }
 
     @Override

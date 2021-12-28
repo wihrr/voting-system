@@ -5,7 +5,6 @@ import by.intexsoft.vihrova.votingsystem.model.Menu;
 import by.intexsoft.vihrova.votingsystem.service.MenuService;
 import by.intexsoft.vihrova.votingsystem.repository.MenuRepository;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -14,7 +13,6 @@ import java.util.stream.Collectors;
 @Service
 @RequiredArgsConstructor
 public class MenuServiceImpl implements MenuService {
-    @Autowired
     private final MenuRepository menuRepository;
 
     @Override
@@ -29,7 +27,9 @@ public class MenuServiceImpl implements MenuService {
 
     @Override
     public List<Menu> getAll(int restaurantId) {
-        return menuRepository.findAll().stream().filter(menu -> menu.getRestaurant().getId().equals(restaurantId)).collect(Collectors.toList());
+        return menuRepository.findAll().stream()
+                .filter(menu -> menu.getRestaurant().getId().equals(restaurantId))
+                .collect(Collectors.toList());
     }
 
     @Override
