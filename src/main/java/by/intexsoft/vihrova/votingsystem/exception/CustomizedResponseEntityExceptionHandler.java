@@ -1,6 +1,5 @@
 package by.intexsoft.vihrova.votingsystem.exception;
 
-import by.intexsoft.vihrova.votingsystem.user.UserNotFoundException;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -24,8 +23,8 @@ public class CustomizedResponseEntityExceptionHandler extends ResponseEntityExce
         return new ResponseEntity(exceptionResponse, HttpStatus.INTERNAL_SERVER_ERROR);
     }
 
-    @ExceptionHandler(UserNotFoundException.class)
-    public final ResponseEntity<Object> handleUserNotFoundException(UserNotFoundException ex, WebRequest request) throws Exception{
+    @ExceptionHandler(EntityNotFoundException.class)
+    public final ResponseEntity<Object> handleUserNotFoundException(EntityNotFoundException ex, WebRequest request) throws Exception{
         ExceptionResponse exceptionResponse =
                 new ExceptionResponse(new Date(), ex.getMessage(), request.getDescription(false));
         return new ResponseEntity(exceptionResponse, HttpStatus.NOT_FOUND);

@@ -1,9 +1,0 @@
-package by.intexsoft.vihrova.votingsystem.user.repository;
-
-import by.intexsoft.vihrova.votingsystem.user.User;
-import org.springframework.data.repository.CrudRepository;
-import org.springframework.stereotype.Repository;
-
-@Repository
-public interface UserRepository extends CrudRepository<User, Integer> {
-}
