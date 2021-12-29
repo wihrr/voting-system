@@ -1,10 +1,18 @@
 package by.intexsoft.vihrova.votingsystem.controller;
 
 import by.intexsoft.vihrova.votingsystem.model.User;
+import by.intexsoft.vihrova.votingsystem.model.Vote;
 import by.intexsoft.vihrova.votingsystem.service.impl.UserServiceImpl;
+import by.intexsoft.vihrova.votingsystem.service.impl.VoteServiceImpl;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
+
+import javax.validation.Valid;
+import java.net.URI;
+import java.util.List;
 
 @RestController
 @RequestMapping("/users")
@@ -12,16 +20,37 @@ import org.springframework.web.bind.annotation.*;
 @Slf4j
 public class UserController {
     private final UserServiceImpl userService;
+    private final VoteServiceImpl voteService;
 
-//    @GetMapping
-//    public List<User> users() {
-//       return userService.getAll();
-//    }
+    @GetMapping()
+    public List<User> users() {
+        return userService.getAll();
+    }
 
-    @PostMapping(value = "/{userName}/test", consumes = "application/json", produces = "application/json")
-    public User test(@PathVariable String userName, @RequestParam(value = "age", required = false) Byte userAge, @RequestBody User user) {
-        log.info("This is user from drequest: {}", user);
-        user.setName(userName);
-        return user;
+    @PostMapping()
+    public ResponseEntity<Object> create(@Valid @RequestBody User user) {
+        User newUser = userService.create(user);
+        URI location = ServletUriComponentsBuilder
+                .fromCurrentRequest()
+                .path("/{id}")
+                .buildAndExpand(newUser.getId()).toUri();
+        return ResponseEntity.created(location).build();
+    }
+
+    @GetMapping("/{id}")
+    public User findById(@PathVariable int id) {
+        return userService.getById(id);
+    }
+
+    @DeleteMapping("/{id}")
+    public void deleteById(@PathVariable int id) {
+        userService.delete(id);
+    }
+
+    @GetMapping("/{id}/votes-history")
+    public List<Vote> getWithVotes(@PathVariable int id) {
+//        User user = userService.getById(id);
+//        return user.getVotes();
+        return voteService.getAll(id);
     }
 }

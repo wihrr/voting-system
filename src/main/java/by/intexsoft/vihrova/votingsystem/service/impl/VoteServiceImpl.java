@@ -18,10 +18,10 @@ public class VoteServiceImpl implements VoteService {
     @Override
     public Vote getById(int id, int userId, int menuId) {
         Vote vote = voteRepository.findById(id).orElseThrow(() -> new EntityNotFoundException("Can't found vote with ID - " + id));
-        if (vote.getUser().getId() == userId && vote.getMenu().getId()==menuId){
+        if (vote.getUser().getId() == userId && vote.getMenu().getId() == menuId) {
             return vote;
         } else {
-            throw new EntityNotFoundException("There is no vote with userID - " + userId + " and restaurant ID - " + menuId);
+            throw new EntityNotFoundException("There is no vote with userID - " + userId + " and menu ID - " + menuId);
         }
     }
 
@@ -40,7 +40,7 @@ public class VoteServiceImpl implements VoteService {
 
     @Override
     public Vote save(Vote vote, Integer userId, Integer menuId) {
-        if(!(userId==null && menuId==null)) {
+        if (!(userId == null && menuId == null)) {
             Vote savingVote = voteRepository.save(vote);
             savingVote.getUser().setId(userId);
             savingVote.getMenu().setId(menuId);
@@ -51,9 +51,9 @@ public class VoteServiceImpl implements VoteService {
     }
 
     @Override
-    public void update(Vote vote, Integer userId, Integer menuId){
+    public void update(Vote vote, Integer userId, Integer menuId) {
         save(vote, userId, menuId);
-        if(vote==null){
+        if (vote == null) {
             throw new EntityNotFoundException("Can't update entity with user ID" + userId + " and menu ID - " + menuId);
         }
     }
