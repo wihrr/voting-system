@@ -1,2 +1,6 @@
 server:
   port: 9020
+
+spring:
+  profiles:
+    active: datajpa

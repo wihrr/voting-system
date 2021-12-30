@@ -2,6 +2,7 @@ package by.intexsoft.vihrova.votingsystem.repository.jpa;
 
 import by.intexsoft.vihrova.votingsystem.model.Dish;
 import by.intexsoft.vihrova.votingsystem.repository.DishRepository;
+import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -13,6 +14,7 @@ import java.util.Optional;
 
 @Repository
 @Transactional(readOnly = true)
+@Profile("jpa")
 public abstract class JpaDishRepository implements DishRepository {
 
     @PersistenceContext
@@ -21,7 +23,7 @@ public abstract class JpaDishRepository implements DishRepository {
     @Override
     @Transactional
     public Dish save(Dish dish) {
-        if(dish.getId()==null) {
+        if (dish.getId() == null) {
             em.persist(dish);
             return dish;
         } else {
@@ -31,19 +33,19 @@ public abstract class JpaDishRepository implements DishRepository {
 
     @Override
     @Transactional
-    public void deleteById(int id){
+    public void deleteById(int id) {
         Query query = em.createQuery("DELETE FROM Dish d WHERE d.id=:id");
         query.setParameter("id", id);
     }
 
     @Override
-    public Optional<Dish> findById(int id){
+    public Optional<Dish> findById(int id) {
         Dish dish = em.find(Dish.class, id);
         return Optional.of(dish);
     }
 
     @Override
-    public List<Dish> findAll(){
+    public List<Dish> findAll() {
         Query query = em.createQuery("SELECT d FROM Dish d LEFT JOIN FETCH d.menus ORDER BY d.id");
         return query.getResultList();
     }
