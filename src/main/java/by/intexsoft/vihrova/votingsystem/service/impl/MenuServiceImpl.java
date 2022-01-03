@@ -8,6 +8,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 @Service
@@ -16,36 +17,30 @@ public class MenuServiceImpl implements MenuService {
     private final MenuRepository menuRepository;
 
     @Override
-    public Menu getById(int id, int restaurantId) {
-        Menu menu = menuRepository.findById(id).orElseThrow(()-> new EntityNotFoundException("Can't found menu with ID - " + id));
-            if(menu.getRestaurant().getId() == restaurantId) {
-                return menu;
-        } else {
-            throw new EntityNotFoundException("There is no menu with restaurant ID - " + restaurantId);
-        }
+    public Menu getById(int id) {
+        return menuRepository.findById(id).orElseThrow(() -> new EntityNotFoundException("Can't find menu with ID - " + id));
     }
 
     @Override
-    public List<Menu> getAll(int restaurantId) {
+    public List<Menu> getAll() {
+        return menuRepository.findAll();
+    }
+
+    @Override
+    public Set<Menu> getMenusOfOneRestaurant(int restaurantId) {
         return menuRepository.findAll().stream()
-                .filter(menu -> menu.getRestaurant().getId().equals(restaurantId))
-                .collect(Collectors.toList());
+                .filter(menu -> menu.getRestaurants().stream().anyMatch(restaurant -> restaurant.getId().equals(restaurantId)))
+                .collect(Collectors.toSet());
     }
 
     @Override
-    public Menu save(Menu menu, Integer restaurantId) {
-        if(!(restaurantId==null)){
-            Menu savingMenu = menuRepository.save(menu);
-            savingMenu.getRestaurant().setId(restaurantId);
-            return menu;
-        } else {
-            throw new EntityNotFoundException("There is no restaurant with ID - " + restaurantId);
-        }
+    public Menu save(Menu menu) {
+        return menuRepository.save(menu);
     }
 
     @Override
-    public void delete(int id, int restaurantId) {
-        Menu menu = getById(id, restaurantId);
+    public void delete(int id) {
+        Menu menu = getById(id);
         menuRepository.deleteById(menu.getId());
     }
 }

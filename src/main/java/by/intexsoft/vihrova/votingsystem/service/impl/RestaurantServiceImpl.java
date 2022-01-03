@@ -8,7 +8,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -17,12 +16,8 @@ public class RestaurantServiceImpl implements RestaurantService {
 
     @Override
     public Restaurant getById(int id) {
-        Optional<Restaurant> restaurant = restaurantRepository.findById(id);
-        if(restaurant.isPresent()){
-            return restaurant.get();
-        } else {
-            throw new EntityNotFoundException("There is no restaurant with id - " + id);
-        }
+        return restaurantRepository.findById(id).orElseThrow(() ->
+                new EntityNotFoundException("There is no restaurant with id - " + id));
     }
 
     @Override

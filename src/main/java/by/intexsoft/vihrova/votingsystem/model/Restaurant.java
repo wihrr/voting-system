@@ -1,7 +1,6 @@
 package by.intexsoft.vihrova.votingsystem.model;
 
-import by.intexsoft.vihrova.votingsystem.model.Menu;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -30,12 +29,16 @@ public class Restaurant {
     @Size(min = 5, max = 100)
     private String address;
 
-    @ManyToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE})
+    @ManyToMany(cascade = {CascadeType.MERGE, CascadeType.PERSIST})
     @JoinTable(
             name = "restaurant_menus",
-            joinColumns = @JoinColumn(name = "restaurant_id"),
-            inverseJoinColumns = @JoinColumn(name = "menu_id")
+            joinColumns = {@JoinColumn(name = "restaurant_id")},
+            inverseJoinColumns = {@JoinColumn(name = "menu_id")}
     )
     private Set<Menu> menus = new HashSet<>();
 
+    @JsonIgnore
+    public String getInfoWithoutId() {
+        return this.getAddress() + this.getName();
+    }
 }

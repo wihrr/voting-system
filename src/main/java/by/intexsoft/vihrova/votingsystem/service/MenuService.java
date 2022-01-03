@@ -3,14 +3,17 @@ package by.intexsoft.vihrova.votingsystem.service;
 import by.intexsoft.vihrova.votingsystem.model.Menu;
 
 import java.util.List;
+import java.util.Set;
 
 public interface MenuService {
 
-    Menu getById(int id, int restaurantId);
+    Menu getById(int id);
 
-    List<Menu> getAll(int restaurantId);
+    List<Menu> getAll();
 
-    Menu save(Menu menu, Integer restaurantId);
+    Set<Menu> getMenusOfOneRestaurant(int restaurantId);
 
-    void delete(int id, int restaurantId);
+    Menu save(Menu menu);
+
+    void delete(int id);
 }
