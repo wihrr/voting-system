@@ -29,24 +29,16 @@ public class Menu {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "restaurant_id", nullable = false)
     @OnDelete(action = OnDeleteAction.CASCADE)
-//    @JsonIgnore
     @JsonBackReference
     private Restaurant restaurant;
 
     @ManyToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE})
     private Set<Dish> dishes = new HashSet<>();
 
+    @ManyToMany(mappedBy = "menus")
+    private List<Restaurant> restaurants;
+
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "menu")
     @JsonManagedReference
     private Set<Vote> votes;
-
-    public void addDish(Dish dish){
-        dishes.add(dish);
-        dish.getMenus().add(this);
-    }
-
-    public void removeDish(Dish dish){
-        dishes.remove(dish);
-        dish.getMenus().remove(this);
-    }
 }
