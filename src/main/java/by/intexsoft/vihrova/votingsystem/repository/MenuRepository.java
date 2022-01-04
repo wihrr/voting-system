@@ -1,14 +1,13 @@
 package by.intexsoft.vihrova.votingsystem.repository;
 
 import by.intexsoft.vihrova.votingsystem.model.Menu;
-import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
 import java.util.Optional;
 
 @Repository
-public interface MenuRepository extends CrudRepository<Menu, Integer> {
+public interface MenuRepository {
 
     List<Menu> findAll();
 

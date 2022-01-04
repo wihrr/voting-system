@@ -1,5 +1,9 @@
 package by.intexsoft.vihrova.votingsystem.controller;
 
+import by.intexsoft.vihrova.votingsystem.dto.DishTo;
+import by.intexsoft.vihrova.votingsystem.dto.MenuTo;
+import by.intexsoft.vihrova.votingsystem.dtoutils.DishToUtils;
+import by.intexsoft.vihrova.votingsystem.dtoutils.MenuToUtils;
 import by.intexsoft.vihrova.votingsystem.exception.EntityNotFoundException;
 import by.intexsoft.vihrova.votingsystem.model.Dish;
 import by.intexsoft.vihrova.votingsystem.model.Menu;
@@ -11,7 +15,6 @@ import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.Set;
 
 @RestController
 @RequestMapping("/menus")
@@ -22,8 +25,8 @@ public class MenuController {
     private final DishServiceImpl dishService;
 
     @GetMapping()
-    public List<Menu> getAll() {
-        return menuService.getAll();
+    public List<MenuTo> getAll() {
+        return MenuToUtils.getTos(menuService.getAll());
     }
 
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
@@ -57,7 +60,8 @@ public class MenuController {
     }
 
     @GetMapping("/{menuId}/dishes")
-    public Set<Dish> getDishes(@PathVariable int menuId) {
-        return menuService.getById(menuId).getDishes();
+    public List<DishTo> getDishes(@PathVariable int menuId) {
+        return DishToUtils.getTos(menuService.getById(menuId).getDishes());
+//        return DishToUtils.getTos(dishService.getOfOneMenu(menuId));
     }
 }

@@ -1,5 +1,7 @@
 package by.intexsoft.vihrova.votingsystem.controller;
 
+import by.intexsoft.vihrova.votingsystem.dto.DishTo;
+import by.intexsoft.vihrova.votingsystem.dtoutils.DishToUtils;
 import by.intexsoft.vihrova.votingsystem.exception.EntityNotFoundException;
 import by.intexsoft.vihrova.votingsystem.model.Dish;
 import by.intexsoft.vihrova.votingsystem.service.impl.DishServiceImpl;
@@ -18,8 +20,8 @@ public class DishController {
     private final DishServiceImpl dishService;
 
     @GetMapping()
-    public List<Dish> getAll() {
-        return dishService.getAll();
+    public List<DishTo> getAll() {
+        return DishToUtils.getTos(dishService.getAll());
     }
 
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
@@ -28,8 +30,8 @@ public class DishController {
     }
 
     @GetMapping("/{id}")
-    public Dish getById(@PathVariable int id) {
-        return dishService.getById(id);
+    public DishTo getById(@PathVariable int id) {
+        return DishToUtils.createTo(dishService.getById(id));
     }
 
     @DeleteMapping("/{id}")

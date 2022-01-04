@@ -8,6 +8,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -30,6 +32,7 @@ public class DishServiceImpl implements DishService {
         dishRepository.deleteById(id);
     }
 
+    @Override
     public Dish save(Dish dish) {
         if (!(dish == null) &&
                 getAll().stream()
@@ -38,5 +41,12 @@ public class DishServiceImpl implements DishService {
         } else {
             throw new EntityNotFoundException("Dish either is null or already exists");
         }
+    }
+
+    public Set<Dish> getOfOneMenu(int menuId) {
+        return dishRepository.findAll().stream()
+                .filter(dish -> dish.getMenus().
+                        stream().anyMatch(menu -> menu.getId().equals(menuId)))
+                .collect(Collectors.toSet());
     }
 }

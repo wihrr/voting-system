@@ -27,13 +27,13 @@ public class Dish {
     private String name;
 
     @NotNull
-    private double price;
+    private Double price;
 
     @ManyToMany(mappedBy = "dishes", cascade = {CascadeType.ALL})
     private Set<Menu> menus = new HashSet<>();
 
     @JsonIgnore
-    public String getInfoToCompare(){
-        return  this.getName() + this.getPrice();
+    public String getInfoToCompare() {
+        return this.getName() + this.getPrice();
     }
 }

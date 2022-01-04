@@ -1,12 +1,11 @@
 package by.intexsoft.vihrova.votingsystem.repository;
 
 import by.intexsoft.vihrova.votingsystem.model.Restaurant;
-import org.springframework.data.repository.CrudRepository;
 
 import java.util.List;
 import java.util.Optional;
 
-public interface RestaurantRepository extends CrudRepository<Restaurant, Integer> {
+public interface RestaurantRepository {
 
     List<Restaurant> findAll();
 

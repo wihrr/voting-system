@@ -1,5 +1,7 @@
 package by.intexsoft.vihrova.votingsystem.controller;
 
+import by.intexsoft.vihrova.votingsystem.dto.UserTo;
+import by.intexsoft.vihrova.votingsystem.dtoutils.UserToUtils;
 import by.intexsoft.vihrova.votingsystem.model.User;
 import by.intexsoft.vihrova.votingsystem.model.Vote;
 import by.intexsoft.vihrova.votingsystem.service.impl.UserServiceImpl;
@@ -23,8 +25,8 @@ public class UserController {
     private final VoteServiceImpl voteService;
 
     @GetMapping()
-    public List<User> users() {
-        return userService.getAll();
+    public List<UserTo> users() {
+        return UserToUtils.getTos(userService.getAll());
     }
 
     @PostMapping()
@@ -38,8 +40,8 @@ public class UserController {
     }
 
     @GetMapping("/{id}")
-    public User findById(@PathVariable int id) {
-        return userService.getById(id);
+    public UserTo findById(@PathVariable int id) {
+        return UserToUtils.createTo(userService.getById(id));
     }
 
     @DeleteMapping("/{id}")
@@ -49,8 +51,6 @@ public class UserController {
 
     @GetMapping("/{id}/votes-history")
     public List<Vote> getWithVotes(@PathVariable int id) {
-//        User user = userService.getById(id);
-//        return user.getVotes();
         return voteService.getAll(id);
     }
 }

@@ -2,6 +2,7 @@ package by.intexsoft.vihrova.votingsystem.repository.jpa;
 
 import by.intexsoft.vihrova.votingsystem.model.Vote;
 import by.intexsoft.vihrova.votingsystem.repository.VoteRepository;
+import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
@@ -15,10 +16,11 @@ import java.util.Optional;
 @Repository
 @Transactional(readOnly = true)
 @Profile("jpa")
-public abstract class JpaVoteRepository implements VoteRepository {
+@RequiredArgsConstructor
+public class JpaVoteRepository implements VoteRepository {
 
     @PersistenceContext
-    private EntityManager em;
+    private final EntityManager em;
 
     @Override
     @Transactional
@@ -34,8 +36,12 @@ public abstract class JpaVoteRepository implements VoteRepository {
     @Override
     @Transactional
     public void deleteById(int id) {
-        Query query = em.createQuery("DELETE FROM Vote v WHERE v.id=:id");
-        query.setParameter("id", id);
+        int result = em.createQuery("DELETE FROM Vote v WHERE v.id=:id")
+                .setParameter("id", id)
+                .executeUpdate();
+        if (result != 1) {
+            throw new RuntimeException("There was an error in delete for vote with id: " + id);
+        }
     }
 
     @Override

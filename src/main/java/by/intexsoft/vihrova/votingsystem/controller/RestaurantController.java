@@ -1,5 +1,9 @@
 package by.intexsoft.vihrova.votingsystem.controller;
 
+import by.intexsoft.vihrova.votingsystem.dto.MenuTo;
+import by.intexsoft.vihrova.votingsystem.dto.RestaurantTo;
+import by.intexsoft.vihrova.votingsystem.dtoutils.MenuToUtils;
+import by.intexsoft.vihrova.votingsystem.dtoutils.RestaurantToUtils;
 import by.intexsoft.vihrova.votingsystem.exception.EntityNotFoundException;
 import by.intexsoft.vihrova.votingsystem.model.*;
 import by.intexsoft.vihrova.votingsystem.service.impl.MenuServiceImpl;
@@ -10,7 +14,6 @@ import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.Set;
 
 @RestController
 @RequestMapping("/restaurants")
@@ -21,8 +24,8 @@ public class RestaurantController {
     private final MenuServiceImpl menuService;
 
     @GetMapping()
-    public List<Restaurant> getAll() {
-        return restaurantService.getAll();
+    public List<RestaurantTo> getAll() {
+        return RestaurantToUtils.getTos(restaurantService.getAll());
     }
 
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
@@ -35,8 +38,8 @@ public class RestaurantController {
     }
 
     @GetMapping("/{id}")
-    public Restaurant getById(@PathVariable int id) {
-        return restaurantService.getById(id);
+    public RestaurantTo getById(@PathVariable int id) {
+        return RestaurantToUtils.createTo(restaurantService.getById(id));
     }
 
     @DeleteMapping("/{id}")
@@ -61,7 +64,7 @@ public class RestaurantController {
     }
 
     @GetMapping("/{restaurantId}/menus")
-    public Set<Menu> getMenus(@PathVariable int restaurantId) {
-        return menuService.getMenusOfOneRestaurant(restaurantId);
+    public List<MenuTo> getMenus(@PathVariable int restaurantId) {
+        return MenuToUtils.getTos(menuService.getMenusOfOneRestaurant(restaurantId));
     }
 }

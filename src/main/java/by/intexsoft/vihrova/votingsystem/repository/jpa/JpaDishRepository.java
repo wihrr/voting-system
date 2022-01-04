@@ -2,6 +2,7 @@ package by.intexsoft.vihrova.votingsystem.repository.jpa;
 
 import by.intexsoft.vihrova.votingsystem.model.Dish;
 import by.intexsoft.vihrova.votingsystem.repository.DishRepository;
+import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
@@ -15,10 +16,11 @@ import java.util.Optional;
 @Repository
 @Transactional(readOnly = true)
 @Profile("jpa")
-public abstract class JpaDishRepository implements DishRepository {
+@RequiredArgsConstructor
+public class JpaDishRepository implements DishRepository {
 
     @PersistenceContext
-    private EntityManager em;
+    private final EntityManager em;
 
     @Override
     @Transactional
@@ -34,8 +36,13 @@ public abstract class JpaDishRepository implements DishRepository {
     @Override
     @Transactional
     public void deleteById(int id) {
-        Query query = em.createQuery("DELETE FROM Dish d WHERE d.id=:id");
-        query.setParameter("id", id);
+        int result = em.createQuery("DELETE FROM Dish d WHERE d.id=:id")
+                .setParameter("id", id)
+                .executeUpdate();
+
+        if (result != 1) {
+            throw new RuntimeException("There was an error in delete for dish with id: " + id);
+        }
     }
 
     @Override
