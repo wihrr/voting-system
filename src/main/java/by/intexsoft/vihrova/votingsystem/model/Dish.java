@@ -1,20 +1,19 @@
 package by.intexsoft.vihrova.votingsystem.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
-import java.util.HashSet;
 import java.util.Set;
 
-@Data
+
 @NoArgsConstructor
 @AllArgsConstructor
+@Getter
+@Setter
 @Entity
 @Table(name = "dishes")
 public class Dish {
@@ -29,8 +28,13 @@ public class Dish {
     @NotNull
     private Double price;
 
-    @ManyToMany(mappedBy = "dishes", cascade = {CascadeType.ALL})
-    private Set<Menu> menus = new HashSet<>();
+    @ManyToMany(cascade = {CascadeType.ALL})
+    @JoinTable(
+            name = "menu_dishes",
+            joinColumns = {@JoinColumn(name = "dish_id")},
+            inverseJoinColumns = {@JoinColumn(name = "menu_id")}
+    )
+    private Set<Menu> menus;
 
     @JsonIgnore
     public String getInfoToCompare() {

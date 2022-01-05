@@ -1,9 +1,7 @@
 package by.intexsoft.vihrova.votingsystem.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
@@ -11,7 +9,8 @@ import javax.validation.constraints.Size;
 import java.util.HashSet;
 import java.util.Set;
 
-@Data
+@Getter
+@Setter
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
@@ -29,13 +28,13 @@ public class Restaurant {
     @Size(min = 5, max = 100)
     private String address;
 
-    @ManyToMany(cascade = {CascadeType.MERGE, CascadeType.PERSIST})
+    @ManyToMany(cascade = {CascadeType.ALL})
     @JoinTable(
             name = "restaurant_menus",
             joinColumns = {@JoinColumn(name = "restaurant_id")},
             inverseJoinColumns = {@JoinColumn(name = "menu_id")}
     )
-    private Set<Menu> menus = new HashSet<>();
+    private Set<Menu> menus;
 
     @JsonIgnore
     public String getInfoWithoutId() {

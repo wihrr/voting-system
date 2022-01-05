@@ -51,6 +51,11 @@ public class JpaRestaurantRepository implements RestaurantRepository {
     }
 
     @Override
+    public Restaurant getById(int id){
+        return em.getReference(Restaurant.class, id);
+    }
+
+    @Override
     public List<Restaurant> findAll() {
         Query query = em.createQuery("SELECT r FROM Restaurant r");
         return query.getResultList();

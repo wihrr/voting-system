@@ -34,6 +34,11 @@ public class JpaDishRepository implements DishRepository {
     }
 
     @Override
+    public Dish getById(int id) {
+        return em.getReference(Dish.class, id);
+    }
+
+    @Override
     @Transactional
     public void deleteById(int id) {
         int result = em.createQuery("DELETE FROM Dish d WHERE d.id=:id")

@@ -1,14 +1,13 @@
 package by.intexsoft.vihrova.votingsystem.model;
 
-;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import lombok.*;
 
 import javax.persistence.*;
 import java.util.*;
 
-@Data
+@Getter
+@Setter
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
@@ -18,16 +17,23 @@ public class Menu {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
-    @ManyToMany(cascade = {CascadeType.ALL})
+    @JsonIgnore
+    @ManyToMany(cascade = {CascadeType.ALL}, fetch = FetchType.LAZY)
     @JoinTable(
             name = "menu_dishes",
             joinColumns = {@JoinColumn(name = "menu_id")},
             inverseJoinColumns = {@JoinColumn(name = "dish_id")}
     )
-    private Set<Dish> dishes = new HashSet<>();
+    private Set<Dish> dishes;
 
-    @ManyToMany(mappedBy = "menus", cascade = {CascadeType.MERGE, CascadeType.PERSIST})
-    private Set<Restaurant> restaurants = new HashSet<>();
+    @JsonIgnore
+    @ManyToMany(cascade = {CascadeType.ALL})
+    @JoinTable(
+            name = "restaurant_menus",
+            joinColumns = {@JoinColumn(name = "menu_id")},
+            inverseJoinColumns = {@JoinColumn(name = "restaurant_id")}
+    )
+    private Set<Restaurant> restaurants;
 
 //    @OneToMany(fetch = FetchType.LAZY, mappedBy = "menu")
 //    @JsonManagedReference

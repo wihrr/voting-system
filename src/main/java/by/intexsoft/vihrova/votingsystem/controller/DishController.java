@@ -4,6 +4,7 @@ import by.intexsoft.vihrova.votingsystem.dto.DishTo;
 import by.intexsoft.vihrova.votingsystem.dtoutils.DishToUtils;
 import by.intexsoft.vihrova.votingsystem.exception.EntityNotFoundException;
 import by.intexsoft.vihrova.votingsystem.model.Dish;
+import by.intexsoft.vihrova.votingsystem.model.Menu;
 import by.intexsoft.vihrova.votingsystem.service.impl.DishServiceImpl;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -11,6 +12,7 @@ import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/dishes")
@@ -25,13 +27,18 @@ public class DishController {
     }
 
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
-    public Dish create(@RequestBody Dish dish) {
-        return dishService.save(dish);
+    public DishTo create(@RequestBody DishTo dishTo) {
+        return dishService.save(dishTo);
     }
 
     @GetMapping("/{id}")
     public DishTo getById(@PathVariable int id) {
-        return DishToUtils.createTo(dishService.getById(id));
+        Dish dish = dishService.getById(id);
+        DishTo dishTo = DishToUtils.createTo(dish);
+        dishTo.setMenuIds(dish.getMenus().stream()
+                .map(Menu::getId)
+                .collect(Collectors.toSet()));
+        return dishTo;
     }
 
     @DeleteMapping("/{id}")
@@ -39,8 +46,9 @@ public class DishController {
         dishService.delete(id);
     }
 
+//    @PreAuthorize("#hasRole('ADMIN')")
     @PutMapping(value = "/{id}", consumes = MediaType.APPLICATION_JSON_VALUE)
-    public Dish update(@PathVariable int id, @RequestBody Dish dish) {
+    public DishTo update(@PathVariable int id, @RequestBody DishTo dish) {
         if (dish.getId().equals(id)) {
             return dishService.save(dish);
         } else {

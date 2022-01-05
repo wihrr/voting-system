@@ -1,13 +1,19 @@
 package by.intexsoft.vihrova.votingsystem.service.impl;
 
+import by.intexsoft.vihrova.votingsystem.dto.DishTo;
+import by.intexsoft.vihrova.votingsystem.dtoutils.DishToUtils;
+import by.intexsoft.vihrova.votingsystem.exception.BadRequestException;
 import by.intexsoft.vihrova.votingsystem.exception.EntityNotFoundException;
 import by.intexsoft.vihrova.votingsystem.model.Dish;
+import by.intexsoft.vihrova.votingsystem.model.Menu;
 import by.intexsoft.vihrova.votingsystem.repository.DishRepository;;
+import by.intexsoft.vihrova.votingsystem.repository.MenuRepository;
 import by.intexsoft.vihrova.votingsystem.service.DishService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -15,6 +21,7 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class DishServiceImpl implements DishService {
     private final DishRepository dishRepository;
+    private final MenuRepository menuRepository;
 
     @Override
     public List<Dish> getAll() {
@@ -33,20 +40,33 @@ public class DishServiceImpl implements DishService {
     }
 
     @Override
-    public Dish save(Dish dish) {
-        if (!(dish == null) &&
-                getAll().stream()
-                        .noneMatch(currentDish -> currentDish.getInfoToCompare().equals(dish.getInfoToCompare()))) {
-            return dishRepository.save(dish);
-        } else {
-            throw new EntityNotFoundException("Dish either is null or already exists");
+    public DishTo save(DishTo dishTo) {
+        if(dishRepository.findAll().stream()
+                .anyMatch(dish -> dish.getName().equals(dishTo.getName()))) {
+            throw new BadRequestException("Dish is already exists");
         }
+        Dish savingDish = dishRepository.save(toDish(dishTo));
+        dishTo.setId(savingDish.getId());
+        return dishTo;
     }
 
-    public Set<Dish> getOfOneMenu(int menuId) {
-        return dishRepository.findAll().stream()
-                .filter(dish -> dish.getMenus().
-                        stream().anyMatch(menu -> menu.getId().equals(menuId)))
+    public DishTo createDishInMenu(int menuId, DishTo dishTo){
+        Menu menu = menuRepository.findById(menuId).orElseThrow(() -> new EntityNotFoundException("Can't find menu with ID " + menuId));
+        Dish savingDish = dishRepository.save(toDish(dishTo));
+        menu.getDishes().add(savingDish);
+        DishTo savingDishTo = DishToUtils.createTo(savingDish);
+        savingDishTo.setMenuIds(dishTo.getMenuIds());
+        return savingDishTo;
+    }
+
+    public Dish toDish(DishTo dishTo){
+        Set<Menu> menus = dishTo.getMenuIds().stream()
+                .map(menuRepository::getById)
                 .collect(Collectors.toSet());
+        Dish dish = new Dish();
+        dish.setName(dishTo.getName());
+        dish.setPrice(dishTo.getPrice());
+        dish.setMenus(menus);
+        return dish;
     }
 }

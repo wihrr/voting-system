@@ -1,15 +1,14 @@
 package by.intexsoft.vihrova.votingsystem.dto;
 
+import lombok.Builder;
 import lombok.Data;
 
-import java.beans.ConstructorProperties;
+import java.util.Set;
 
 @Data
+@Builder
 public class MenuTo {
     private Integer id;
-
-    @ConstructorProperties({"id"})
-    public MenuTo(Integer id) {
-        this.id = id;
-    }
+    private Set<Integer> restaurantIds;
+    private Set<Integer> dishesIds;
 }

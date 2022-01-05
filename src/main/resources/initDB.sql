@@ -29,10 +29,10 @@ CREATE TABLE user_roles
 (
     "id"       SERIAL PRIMARY KEY NOT NULL,
     "user_id"  bigint             NOT NULL,
-    "roles_id" int                NOT NULL,
-    CONSTRAINT user_roles_idx UNIQUE (user_id, roles_id),
+    "role_id" int                NOT NULL,
+    CONSTRAINT user_roles_idx UNIQUE (user_id, role_id),
     FOREIGN KEY (user_id) REFERENCES users (id) ON DELETE CASCADE,
-    FOREIGN KEY (roles_id) REFERENCES roles (id) ON DELETE CASCADE
+    FOREIGN KEY (role_id) REFERENCES roles (id) ON DELETE CASCADE
 );
 
 
@@ -89,10 +89,9 @@ CREATE TABLE votes
 CREATE TABLE restaurant_menus
 (
     "id"            SERIAL PRIMARY KEY NOT NULL,
-    "date"          DATE               NOT NULL,
     "restaurant_id" bigint             NOT NULL,
     "menu_id"       bigint             NOT NULL,
     FOREIGN KEY (restaurant_id) REFERENCES restaurants (id) ON DELETE CASCADE,
     FOREIGN KEY (menu_id) REFERENCES menus (id) ON DELETE CASCADE,
-    CONSTRAINT restaurant_menus_idx UNIQUE (menu_id, restaurant_id, date)
+    CONSTRAINT restaurant_menus_idx UNIQUE (menu_id, restaurant_id)
 );

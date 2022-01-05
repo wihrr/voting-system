@@ -15,4 +15,6 @@ public interface DishRepository {
     Optional<Dish> findById(int id);
 
     Dish save(Dish dish);
+
+    Dish getById(int id);
 }

@@ -15,5 +15,7 @@ public interface MenuRepository {
 
     Optional<Menu> findById(int id);
 
+    Menu getById(int id);
+
     Menu save(Menu menu);
 }

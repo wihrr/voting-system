@@ -4,6 +4,7 @@ import by.intexsoft.vihrova.votingsystem.dto.MenuTo;
 import by.intexsoft.vihrova.votingsystem.dto.RestaurantTo;
 import by.intexsoft.vihrova.votingsystem.dtoutils.MenuToUtils;
 import by.intexsoft.vihrova.votingsystem.dtoutils.RestaurantToUtils;
+import by.intexsoft.vihrova.votingsystem.exception.BadRequestException;
 import by.intexsoft.vihrova.votingsystem.exception.EntityNotFoundException;
 import by.intexsoft.vihrova.votingsystem.model.*;
 import by.intexsoft.vihrova.votingsystem.service.impl.MenuServiceImpl;
@@ -14,6 +15,7 @@ import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/restaurants")
@@ -29,17 +31,18 @@ public class RestaurantController {
     }
 
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
-    public Restaurant create(@RequestBody Restaurant restaurant) {
-        if (restaurantService.getAll().stream()
-                .anyMatch(currentRestaurant -> currentRestaurant.getInfoWithoutId().equals(restaurant.getInfoWithoutId()))) {
-            throw new EntityNotFoundException("Restaurant is already exists");
-        }
-        return restaurantService.save(restaurant);
+    public RestaurantTo create(@RequestBody RestaurantTo restaurantTo) {
+        return restaurantService.save(restaurantTo);
     }
 
     @GetMapping("/{id}")
     public RestaurantTo getById(@PathVariable int id) {
-        return RestaurantToUtils.createTo(restaurantService.getById(id));
+        Restaurant restaurant = restaurantService.getById(id);
+        RestaurantTo restaurantTo = RestaurantToUtils.createTo(restaurant);
+        restaurantTo.setMenusIds(restaurant.getMenus().stream()
+                .map(Menu::getId)
+                .collect(Collectors.toSet()));
+        return restaurantTo;
     }
 
     @DeleteMapping("/{id}")
@@ -48,7 +51,7 @@ public class RestaurantController {
     }
 
     @PutMapping(value = "/{id}", consumes = MediaType.APPLICATION_JSON_VALUE)
-    public Restaurant update(@PathVariable int id, @RequestBody Restaurant restaurant) {
+    public RestaurantTo update(@PathVariable int id, @RequestBody RestaurantTo restaurant) {
         if (restaurant.getId().equals(id)) {
             return restaurantService.save(restaurant);
         } else {
@@ -58,9 +61,8 @@ public class RestaurantController {
 
 
     @PostMapping(value = "/{restaurantId}/menus", consumes = MediaType.APPLICATION_JSON_VALUE)
-    public Menu createMenu(@PathVariable int restaurantId, @RequestBody Menu menu) {
-        menu.getRestaurants().add(restaurantService.getById(restaurantId));
-        return menuService.save(menu);
+    public MenuTo createMenu(@PathVariable int restaurantId, @RequestBody MenuTo menuTo) {
+        return menuService.createMenuInRestaurant(restaurantId, menuTo);
     }
 
     @GetMapping("/{restaurantId}/menus")

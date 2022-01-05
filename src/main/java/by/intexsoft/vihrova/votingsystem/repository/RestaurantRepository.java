@@ -14,4 +14,6 @@ public interface RestaurantRepository {
     Optional<Restaurant> findById(int id);
 
     Restaurant save(Restaurant restaurant);
+
+    Restaurant getById(int id);
 }

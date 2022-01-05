@@ -52,6 +52,11 @@ public class JpaMenuRepository implements MenuRepository {
     }
 
     @Override
+    public Menu getById(int id) {
+        return em.getReference(Menu.class, id);
+    }
+
+    @Override
     public List<Menu> findAll() {
         Query query = em.createQuery("SELECT m FROM Menu m LEFT JOIN FETCH m.dishes ORDER BY m.id");
         return query.getResultList();
