@@ -21,7 +21,7 @@ public class VoteServiceImpl implements VoteService {
         if (vote.getUser().getId() == userId && vote.getMenu().getId() == menuId) {
             return vote;
         } else {
-            throw new EntityNotFoundException("There is no vote with userID - " + userId + " and menu ID - " + menuId);
+            throw new EntityNotFoundException(exceptionMessage(userId,menuId));
         }
     }
 
@@ -46,7 +46,7 @@ public class VoteServiceImpl implements VoteService {
             savingVote.getMenu().setId(menuId);
             return vote;
         } else {
-            throw new EntityNotFoundException("There is no vote with user ID - " + userId + " and menu ID - " + menuId);
+            throw new EntityNotFoundException(exceptionMessage(userId, menuId));
         }
     }
 
@@ -54,7 +54,7 @@ public class VoteServiceImpl implements VoteService {
     public void update(Vote vote, Integer userId, Integer menuId) {
         save(vote, userId, menuId);
         if (vote == null) {
-            throw new EntityNotFoundException("Can't update entity with user ID" + userId + " and menu ID - " + menuId);
+            throw new EntityNotFoundException(exceptionMessage(userId, menuId));
         }
     }
 
@@ -62,5 +62,9 @@ public class VoteServiceImpl implements VoteService {
     public void delete(int id, int userId, int menuId) {
         Vote vote = getById(id, userId, menuId);
         voteRepository.deleteById(vote.getId());
+    }
+
+    private String exceptionMessage(int userId, int menuId) {
+        return "There is no vote with user ID - " + userId + " and menu ID - " + menuId;
     }
 }

@@ -2,6 +2,7 @@ package by.intexsoft.vihrova.votingsystem.dtoutils;
 
 import by.intexsoft.vihrova.votingsystem.dto.DishTo;
 import by.intexsoft.vihrova.votingsystem.model.Dish;
+import by.intexsoft.vihrova.votingsystem.model.Menu;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 
@@ -17,6 +18,9 @@ public class DishToUtils {
                 .id(dish.getId())
                 .name(dish.getName())
                 .price(dish.getPrice())
+                .menuIds(dish.getMenus().stream()
+                        .map(Menu::getId)
+                        .collect(Collectors.toSet()))
                 .build();
     }
 

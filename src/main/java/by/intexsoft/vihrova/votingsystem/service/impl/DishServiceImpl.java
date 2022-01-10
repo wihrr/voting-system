@@ -41,13 +41,8 @@ public class DishServiceImpl implements DishService {
 
     @Override
     public DishTo save(DishTo dishTo) {
-        if(dishRepository.findAll().stream()
-                .anyMatch(dish -> dish.getName().equals(dishTo.getName()))) {
-            throw new BadRequestException("Dish is already exists");
-        }
-        Dish savingDish = dishRepository.save(toDish(dishTo));
-        dishTo.setId(savingDish.getId());
-        return dishTo;
+        Dish savedDish = dishRepository.save(toDish(dishTo));
+        return DishToUtils.createTo(savedDish);
     }
 
     public DishTo createDishInMenu(int menuId, DishTo dishTo){

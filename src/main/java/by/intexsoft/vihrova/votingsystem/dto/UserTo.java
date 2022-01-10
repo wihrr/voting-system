@@ -1,22 +1,18 @@
 package by.intexsoft.vihrova.votingsystem.dto;
 
+import lombok.Builder;
 import lombok.Data;
 
-import java.beans.ConstructorProperties;
 import java.util.Date;
+import java.util.Set;
 
 @Data
+@Builder
 public class UserTo {
     private Integer id;
     private String name;
     private String email;
+    private String password;
     private Date registered;
-
-    @ConstructorProperties({"id", "name", "email", "registered"})
-    public UserTo(Integer id, String name, String email, Date registered) {
-        this.id = id;
-        this.name = name;
-        this.email = email;
-        this.registered = registered;
-    }
+    private Set<Integer> rolesIds;
 }

@@ -18,4 +18,6 @@ public interface MenuRepository {
     Menu getById(int id);
 
     Menu save(Menu menu);
+
+    List <Menu> getRestaurantMenus(int restaurantId);
 }

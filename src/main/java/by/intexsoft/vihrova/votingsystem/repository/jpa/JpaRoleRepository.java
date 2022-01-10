@@ -1,5 +1,6 @@
 package by.intexsoft.vihrova.votingsystem.repository.jpa;
 
+import by.intexsoft.vihrova.votingsystem.exception.JpaException;
 import by.intexsoft.vihrova.votingsystem.model.Role;
 import by.intexsoft.vihrova.votingsystem.repository.RoleRepository;
 import lombok.RequiredArgsConstructor;
@@ -34,13 +35,18 @@ public class JpaRoleRepository implements RoleRepository {
     }
 
     @Override
+    public Role getById(int id) {
+        return em.getReference(Role.class, id);
+    }
+
+    @Override
     @Transactional
     public void deleteById(int id) {
         int result = em.createQuery("DELETE FROM Role r WHERE r.id=:id")
                 .setParameter("id", id)
                 .executeUpdate();
         if (result != 1) {
-            throw new RuntimeException("There was an error in delete for role with id: " + id);
+            throw new JpaException ("There was an error in delete for role with id: " + id);
         }
     }
 

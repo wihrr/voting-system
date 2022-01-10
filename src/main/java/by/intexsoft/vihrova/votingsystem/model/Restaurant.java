@@ -1,12 +1,10 @@
 package by.intexsoft.vihrova.votingsystem.model;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.*;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
-import java.util.HashSet;
 import java.util.Set;
 
 @Getter
@@ -35,9 +33,4 @@ public class Restaurant {
             inverseJoinColumns = {@JoinColumn(name = "menu_id")}
     )
     private Set<Menu> menus;
-
-    @JsonIgnore
-    public String getInfoWithoutId() {
-        return this.getAddress() + this.getName();
-    }
 }

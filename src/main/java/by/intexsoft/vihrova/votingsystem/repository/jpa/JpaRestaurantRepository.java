@@ -1,5 +1,6 @@
 package by.intexsoft.vihrova.votingsystem.repository.jpa;
 
+import by.intexsoft.vihrova.votingsystem.exception.JpaException;
 import by.intexsoft.vihrova.votingsystem.model.Restaurant;
 import by.intexsoft.vihrova.votingsystem.repository.RestaurantRepository;
 import lombok.RequiredArgsConstructor;
@@ -40,7 +41,7 @@ public class JpaRestaurantRepository implements RestaurantRepository {
                 .setParameter("id", id)
                 .executeUpdate();
         if (result != 1) {
-            throw new RuntimeException("There was an error in delete for restaurant with id: " + id);
+            throw new JpaException ("There was an error in delete for restaurant with id: " + id);
         }
     }
 
@@ -53,6 +54,12 @@ public class JpaRestaurantRepository implements RestaurantRepository {
     @Override
     public Restaurant getById(int id){
         return em.getReference(Restaurant.class, id);
+    }
+
+    @Override
+    public Optional<Restaurant> findRestaurantByName(String name) {
+        Restaurant restaurant = em.find(Restaurant.class, name);
+        return Optional.of(restaurant);
     }
 
     @Override

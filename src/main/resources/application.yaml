@@ -3,7 +3,7 @@ server:
 
 spring:
   profiles:
-    active: datajpa, postgres
+    active: datajpa, postgres, basicauth
   jackson:
     serialization:
       FAIL_ON_EMPTY_BEANS: false

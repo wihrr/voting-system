@@ -29,8 +29,7 @@ public class RestaurantServiceImpl implements RestaurantService {
 
     @Override
     public RestaurantTo save(RestaurantTo restaurantTo) {
-        if (restaurantRepository.findAll().stream()
-                .anyMatch(currentRestaurant -> currentRestaurant.getName().equals(restaurantTo.getName()))) {
+        if (restaurantRepository.findRestaurantByName(restaurantTo.getName()).isPresent()) {
             throw new BadRequestException("Restaurant is already exists");
         }
         Restaurant savingRestaurant = restaurantRepository.save(toRestaurant(restaurantTo));

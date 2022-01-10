@@ -46,7 +46,31 @@ public class User implements UserDetails {
             joinColumns = {@JoinColumn(name = "user_id")},
             inverseJoinColumns = {@JoinColumn(name = "role_id")}
     )
-    private Set<Role> roles;
+    private transient Set<Role> roles;
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        User user = (User) o;
+        return id.equals(user.id) && email.equals(user.email);
+    }
+
+    @Override
+    public String toString() {
+        return "User{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                ", email='" + email + '\'' +
+                ", registered=" + registered +
+                ", roles=" + roles +
+                '}';
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, email);
+    }
 
     @Override
     public List<SimpleGrantedAuthority> getAuthorities() {
@@ -79,8 +103,4 @@ public class User implements UserDetails {
     public boolean isEnabled() {
         return true;
     }
-
-//    @OneToMany(fetch = FetchType.LAZY, mappedBy = "user", cascade = {CascadeType.ALL})
-////    @JsonManagedReference
-//    private List<Vote> votes;
 }

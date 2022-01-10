@@ -1,7 +1,9 @@
 package by.intexsoft.vihrova.votingsystem.dtoutils;
 
 import by.intexsoft.vihrova.votingsystem.dto.MenuTo;
+import by.intexsoft.vihrova.votingsystem.model.Dish;
 import by.intexsoft.vihrova.votingsystem.model.Menu;
+import by.intexsoft.vihrova.votingsystem.model.Restaurant;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 
@@ -14,8 +16,14 @@ public class MenuToUtils {
 
     public static MenuTo createTo(Menu menu) {
         return MenuTo.builder()
-        .id(menu.getId())
-        .build();
+                .id(menu.getId())
+                .dishesIds(menu.getDishes().stream()
+                        .map(Dish::getId)
+                        .collect(Collectors.toSet()))
+                .restaurantIds(menu.getRestaurants().stream()
+                        .map(Restaurant::getId)
+                        .collect(Collectors.toSet()))
+                .build();
     }
 
     public static List<MenuTo> getTos(Collection<Menu> menus) {

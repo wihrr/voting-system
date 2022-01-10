@@ -4,7 +4,6 @@ import by.intexsoft.vihrova.votingsystem.dto.MenuTo;
 import by.intexsoft.vihrova.votingsystem.dto.RestaurantTo;
 import by.intexsoft.vihrova.votingsystem.dtoutils.MenuToUtils;
 import by.intexsoft.vihrova.votingsystem.dtoutils.RestaurantToUtils;
-import by.intexsoft.vihrova.votingsystem.exception.BadRequestException;
 import by.intexsoft.vihrova.votingsystem.exception.EntityNotFoundException;
 import by.intexsoft.vihrova.votingsystem.model.*;
 import by.intexsoft.vihrova.votingsystem.service.impl.MenuServiceImpl;
@@ -15,7 +14,6 @@ import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/restaurants")
@@ -25,7 +23,7 @@ public class RestaurantController {
     private final RestaurantServiceImpl restaurantService;
     private final MenuServiceImpl menuService;
 
-    @GetMapping()
+    @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
     public List<RestaurantTo> getAll() {
         return RestaurantToUtils.getTos(restaurantService.getAll());
     }
@@ -35,14 +33,10 @@ public class RestaurantController {
         return restaurantService.save(restaurantTo);
     }
 
-    @GetMapping("/{id}")
+    @GetMapping(value = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
     public RestaurantTo getById(@PathVariable int id) {
         Restaurant restaurant = restaurantService.getById(id);
-        RestaurantTo restaurantTo = RestaurantToUtils.createTo(restaurant);
-        restaurantTo.setMenusIds(restaurant.getMenus().stream()
-                .map(Menu::getId)
-                .collect(Collectors.toSet()));
-        return restaurantTo;
+        return RestaurantToUtils.createTo(restaurant);
     }
 
     @DeleteMapping("/{id}")
@@ -65,7 +59,7 @@ public class RestaurantController {
         return menuService.createMenuInRestaurant(restaurantId, menuTo);
     }
 
-    @GetMapping("/{restaurantId}/menus")
+    @GetMapping(value = "/{restaurantId}/menus", produces = MediaType.APPLICATION_JSON_VALUE)
     public List<MenuTo> getMenus(@PathVariable int restaurantId) {
         return MenuToUtils.getTos(menuService.getMenusOfOneRestaurant(restaurantId));
     }

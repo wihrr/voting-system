@@ -2,18 +2,14 @@ package by.intexsoft.vihrova.votingsystem.controller;
 
 import by.intexsoft.vihrova.votingsystem.dto.UserTo;
 import by.intexsoft.vihrova.votingsystem.dtoutils.UserToUtils;
-import by.intexsoft.vihrova.votingsystem.model.User;
 import by.intexsoft.vihrova.votingsystem.model.Vote;
 import by.intexsoft.vihrova.votingsystem.service.impl.UserServiceImpl;
 import by.intexsoft.vihrova.votingsystem.service.impl.VoteServiceImpl;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.http.ResponseEntity;
+import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
-import javax.validation.Valid;
-import java.net.URI;
 import java.util.List;
 
 @RestController
@@ -24,32 +20,37 @@ public class UserController {
     private final UserServiceImpl userService;
     private final VoteServiceImpl voteService;
 
-    @GetMapping()
+    @PostMapping(value = "/register", produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
+    public UserTo register(@RequestBody UserTo userTo) {
+        return userService.register(userTo);
+    }
+
+    @GetMapping("/test")
+    public String test(){
+        return "Hello";
+    }
+
+    @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
     public List<UserTo> users() {
         return UserToUtils.getTos(userService.getAll());
     }
 
-    @PostMapping()
-    public ResponseEntity<Object> create(@Valid @RequestBody User user) {
-        User newUser = userService.create(user);
-        URI location = ServletUriComponentsBuilder
-                .fromCurrentRequest()
-                .path("/{id}")
-                .buildAndExpand(newUser.getId()).toUri();
-        return ResponseEntity.created(location).build();
+    @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
+    public UserTo create(@RequestBody UserTo userTo) {
+        return userService.create(userTo);
     }
 
-    @GetMapping("/{id}")
+    @GetMapping(value = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
     public UserTo findById(@PathVariable int id) {
         return UserToUtils.createTo(userService.getById(id));
     }
 
-    @DeleteMapping("/{id}")
+    @DeleteMapping(value = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
     public void deleteById(@PathVariable int id) {
         userService.delete(id);
     }
 
-    @GetMapping("/{id}/votes-history")
+    @GetMapping(value = "/{id}/votes-history", produces = MediaType.APPLICATION_JSON_VALUE)
     public List<Vote> getWithVotes(@PathVariable int id) {
         return voteService.getAll(id);
     }

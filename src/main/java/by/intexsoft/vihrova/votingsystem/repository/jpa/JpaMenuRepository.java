@@ -1,5 +1,6 @@
 package by.intexsoft.vihrova.votingsystem.repository.jpa;
 
+import by.intexsoft.vihrova.votingsystem.exception.JpaException;
 import by.intexsoft.vihrova.votingsystem.model.Menu;
 import by.intexsoft.vihrova.votingsystem.repository.MenuRepository;
 import lombok.RequiredArgsConstructor;
@@ -34,6 +35,13 @@ public class JpaMenuRepository implements MenuRepository {
     }
 
     @Override
+    public List<Menu> getRestaurantMenus(int restaurantId) {
+        Query query = em.createQuery("SELECT r.menus FROM Restaurant r WHERE r.id=:restaurantId")
+                .setParameter("restaurantId", restaurantId);
+        return query.getResultList();
+    }
+
+    @Override
     @Transactional
     public void deleteById(int id) {
         int result = em.createQuery("DELETE FROM Menu m WHERE m.id=:id")
@@ -41,7 +49,7 @@ public class JpaMenuRepository implements MenuRepository {
                 .executeUpdate();
 
         if (result != 1) {
-            throw new RuntimeException("There was an error in delete for menu with id: " + id);
+            throw new JpaException ("There was an error in delete for menu with id: " + id);
         }
     }
 

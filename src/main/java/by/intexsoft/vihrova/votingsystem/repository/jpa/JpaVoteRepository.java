@@ -1,5 +1,6 @@
 package by.intexsoft.vihrova.votingsystem.repository.jpa;
 
+import by.intexsoft.vihrova.votingsystem.exception.JpaException;
 import by.intexsoft.vihrova.votingsystem.model.Vote;
 import by.intexsoft.vihrova.votingsystem.repository.VoteRepository;
 import lombok.RequiredArgsConstructor;
@@ -40,7 +41,7 @@ public class JpaVoteRepository implements VoteRepository {
                 .setParameter("id", id)
                 .executeUpdate();
         if (result != 1) {
-            throw new RuntimeException("There was an error in delete for vote with id: " + id);
+            throw new JpaException ("There was an error in delete for vote with id: " + id);
         }
     }
 

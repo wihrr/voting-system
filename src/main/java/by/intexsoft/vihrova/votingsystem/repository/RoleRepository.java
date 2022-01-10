@@ -16,4 +16,6 @@ public interface RoleRepository {
     Optional<Role> findById(int id);
 
     Role save(Role role);
+
+    Role getById(int id);
 }

@@ -1,10 +1,7 @@
 package by.intexsoft.vihrova.votingsystem.service.impl;
 
-import by.intexsoft.vihrova.votingsystem.dto.DishTo;
 import by.intexsoft.vihrova.votingsystem.dto.MenuTo;
-import by.intexsoft.vihrova.votingsystem.dtoutils.DishToUtils;
 import by.intexsoft.vihrova.votingsystem.dtoutils.MenuToUtils;
-import by.intexsoft.vihrova.votingsystem.exception.BadRequestException;
 import by.intexsoft.vihrova.votingsystem.exception.EntityNotFoundException;
 import by.intexsoft.vihrova.votingsystem.model.Dish;
 import by.intexsoft.vihrova.votingsystem.model.Menu;
@@ -16,6 +13,7 @@ import by.intexsoft.vihrova.votingsystem.repository.MenuRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -39,9 +37,7 @@ public class MenuServiceImpl implements MenuService {
 
     @Override
     public Set<Menu> getMenusOfOneRestaurant(int restaurantId) {
-        return menuRepository.findAll().stream()
-                .filter(menu -> menu.getRestaurants().stream().anyMatch(restaurant -> restaurant.getId().equals(restaurantId)))
-                .collect(Collectors.toSet());
+        return new HashSet<>(menuRepository.getRestaurantMenus(restaurantId));
     }
 
     @Override
@@ -55,8 +51,9 @@ public class MenuServiceImpl implements MenuService {
         menuRepository.deleteById(menu.getId());
     }
 
-    public MenuTo createMenuInRestaurant(int restaurantId, MenuTo menuTo){
-        Restaurant restaurant = restaurantRepository.findById(restaurantId).orElseThrow(() -> new EntityNotFoundException("Can't find restaurant with ID " + restaurantId));
+    public MenuTo createMenuInRestaurant(int restaurantId, MenuTo menuTo) {
+        Restaurant restaurant = restaurantRepository.findById(restaurantId)
+                .orElseThrow(() -> new EntityNotFoundException("Can't find restaurant with ID " + restaurantId));
         Menu savingMenu = menuRepository.save(toMenu(menuTo));
         restaurant.getMenus().add(savingMenu);
         MenuTo savingMenuTo = MenuToUtils.createTo(savingMenu);
@@ -65,15 +62,15 @@ public class MenuServiceImpl implements MenuService {
         return savingMenuTo;
     }
 
-    public Menu toMenu(MenuTo menuTo){
+    public Menu toMenu(MenuTo menuTo) {
         Menu menu = new Menu();
-        if(menuTo.getRestaurantIds().size() > 0){
+        if (menuTo.getRestaurantIds().isEmpty()) {
             Set<Restaurant> restaurants = menuTo.getRestaurantIds().stream()
                     .map(restaurantRepository::getById)
                     .collect(Collectors.toSet());
             menu.setRestaurants(restaurants);
         }
-        if(menuTo.getDishesIds().size() > 0){
+        if (menuTo.getDishesIds().isEmpty()) {
             Set<Dish> dishes = menuTo.getDishesIds().stream()
                     .map(dishRepository::getById)
                     .collect(Collectors.toSet());

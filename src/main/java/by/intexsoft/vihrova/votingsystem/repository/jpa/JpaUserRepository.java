@@ -1,5 +1,6 @@
 package by.intexsoft.vihrova.votingsystem.repository.jpa;
 
+import by.intexsoft.vihrova.votingsystem.exception.JpaException;
 import by.intexsoft.vihrova.votingsystem.model.User;
 import by.intexsoft.vihrova.votingsystem.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
@@ -34,13 +35,19 @@ public class JpaUserRepository implements UserRepository {
     }
 
     @Override
+    public Optional<User> findByName(String userName) {
+        User user = em.find(User.class, userName);
+        return Optional.of(user);
+    }
+
+    @Override
     @Transactional
     public void deleteById(int id) {
         int result = em.createQuery("DELETE FROM User u WHERE u.id=:id")
                 .setParameter("id", id)
                 .executeUpdate();
         if (result != 1) {
-            throw new RuntimeException("There was an error in delete for user with id: " + id);
+            throw new JpaException ("There was an error in delete for user with id: " + id);
         }
     }
 

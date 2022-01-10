@@ -34,8 +34,4 @@ public class Menu {
             inverseJoinColumns = {@JoinColumn(name = "restaurant_id")}
     )
     private Set<Restaurant> restaurants;
-
-//    @OneToMany(fetch = FetchType.LAZY, mappedBy = "menu")
-//    @JsonManagedReference
-//    private Set<Vote> votes;
 }

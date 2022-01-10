@@ -1,6 +1,5 @@
 package by.intexsoft.vihrova.votingsystem.model;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.*;
 
 import javax.persistence.*;
@@ -35,9 +34,4 @@ public class Dish {
             inverseJoinColumns = {@JoinColumn(name = "menu_id")}
     )
     private Set<Menu> menus;
-
-    @JsonIgnore
-    public String getInfoToCompare() {
-        return this.getName() + this.getPrice();
-    }
 }

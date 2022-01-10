@@ -1,5 +1,6 @@
 package by.intexsoft.vihrova.votingsystem.repository.jpa;
 
+import by.intexsoft.vihrova.votingsystem.exception.JpaException;
 import by.intexsoft.vihrova.votingsystem.model.Dish;
 import by.intexsoft.vihrova.votingsystem.repository.DishRepository;
 import lombok.RequiredArgsConstructor;
@@ -46,7 +47,7 @@ public class JpaDishRepository implements DishRepository {
                 .executeUpdate();
 
         if (result != 1) {
-            throw new RuntimeException("There was an error in delete for dish with id: " + id);
+            throw new JpaException("There was an error by delete for dish with id: " + id);
         }
     }
 

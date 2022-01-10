@@ -5,7 +5,6 @@ import by.intexsoft.vihrova.votingsystem.dto.MenuTo;
 import by.intexsoft.vihrova.votingsystem.dtoutils.DishToUtils;
 import by.intexsoft.vihrova.votingsystem.dtoutils.MenuToUtils;
 import by.intexsoft.vihrova.votingsystem.exception.EntityNotFoundException;
-import by.intexsoft.vihrova.votingsystem.model.Dish;
 import by.intexsoft.vihrova.votingsystem.model.Menu;
 import by.intexsoft.vihrova.votingsystem.service.impl.DishServiceImpl;
 import by.intexsoft.vihrova.votingsystem.service.impl.MenuServiceImpl;
@@ -15,7 +14,6 @@ import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/menus")
@@ -25,7 +23,7 @@ public class MenuController {
     private final MenuServiceImpl menuService;
     private final DishServiceImpl dishService;
 
-    @GetMapping()
+    @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
     public List<MenuTo> getAll() {
         return MenuToUtils.getTos(menuService.getAll());
     }
@@ -35,17 +33,11 @@ public class MenuController {
         return menuService.save(menuTo);
     }
 
-    @GetMapping("/{id}")
+    @GetMapping(value = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
     public MenuTo getById(@PathVariable int id) {
         Menu menu = menuService.getById(id);
-        MenuTo menuTo = MenuToUtils.createTo(menu);
-        menuTo.setRestaurantIds(menu.getRestaurants().stream()
-                .map(restaurant -> restaurant.getId())
-                .collect(Collectors.toSet()));
-        menuTo.setDishesIds(menu.getDishes().stream()
-                .map(dish -> dish.getId())
-                .collect(Collectors.toSet()));
-        return menuTo;
+        return MenuToUtils.createTo(menu);
+
     }
 
     @DeleteMapping("/{id}")
@@ -67,9 +59,8 @@ public class MenuController {
         return dishService.createDishInMenu(menuId, dishTo);
     }
 
-    @GetMapping("/{menuId}/dishes")
+    @GetMapping(value = "/{menuId}/dishes", produces = MediaType.APPLICATION_JSON_VALUE)
     public List<DishTo> getDishes(@PathVariable int menuId) {
         return DishToUtils.getTos(menuService.getById(menuId).getDishes());
-//        return DishToUtils.getTos(dishService.getOfOneMenu(menuId));
     }
 }

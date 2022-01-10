@@ -1,6 +1,7 @@
 package by.intexsoft.vihrova.votingsystem.dtoutils;
 
 import by.intexsoft.vihrova.votingsystem.dto.RestaurantTo;
+import by.intexsoft.vihrova.votingsystem.model.Menu;
 import by.intexsoft.vihrova.votingsystem.model.Restaurant;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
@@ -17,6 +18,9 @@ public class RestaurantToUtils {
                 .id(restaurant.getId())
                 .name(restaurant.getName())
                 .address(restaurant.getAddress())
+                .menusIds(restaurant.getMenus().stream()
+                        .map(Menu::getId)
+                        .collect(Collectors.toSet()))
                 .build();
     }
 
